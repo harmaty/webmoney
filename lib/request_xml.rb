@@ -121,6 +121,26 @@ module Webmoney::RequestXML    # :nodoc:all
     }
   end
 
+  def xml_operation_history(opt)
+    req = reqn()
+    Nokogiri::XML::Builder.new( :encoding => 'windows-1251' ) { |x|
+      x.send('w3s.request') {
+        x.reqn req
+        x.wmid @wmid
+        x.sign sign("#{opt[:purse]}#{req}") if classic?
+        x.getoperations do
+          x.purse opt[:purse]
+          x.wmtranid opt[:wmtranid]
+          x.tranid opt[:tranid]
+          x.wminvid opt[:wminvid]
+          x.orderid opt[:orderid]
+          x.datestart opt[:datestart].strftime("%Y%m%d %H:%M:%S")
+          x.datefinish opt[:datefinish].strftime("%Y%m%d %H:%M:%S")
+        end
+      }
+    }
+  end
+
   def xml_outgoing_invoices(opt)
     req = reqn()
     Nokogiri::XML::Builder.new( :encoding => 'windows-1251' ) { |x|
