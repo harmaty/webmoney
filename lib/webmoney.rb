@@ -66,6 +66,8 @@ module Webmoney
     def detect_file(option)
       pathes = %w(%s ~/.wm/%s)
       pathes.map{|path| File.expand_path(path % option)}.detect{|path| File.file?(path)}
+    rescue
+      nil
     end
 
     if file = detect_file(opt[:key])
